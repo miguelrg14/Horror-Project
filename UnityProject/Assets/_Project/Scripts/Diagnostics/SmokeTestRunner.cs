@@ -70,17 +70,18 @@ public class SmokeTestRunner : MonoBehaviour
         // Main menu and its options panel.
         yield return Load("Menu", 4f);
         yield return Capture("main-menu");
-        Check(PlayerMusicManager.instance != null && PlayerMusicManager.instance.Current != null
-              && PlayerMusicManager.instance.Current.loop, "menu music was started and loops");
+        GameObject menuMusic = GameObject.Find("MenuMusic");
+        AudioSource music = menuMusic != null ? menuMusic.GetComponent<AudioSource>() : null;
+        Check(music != null && music.clip != null && music.loop && music.enabled, "menu theme is set to loop");
 
-        SettingsMenu options = FindObjectOfType<SettingsMenu>(true);
-        Check(options != null, "options panel exists");
-        if (options != null)
+        GameObject optionsPanel = FindOptionsPanel();
+        Check(optionsPanel != null, "options panel exists");
+        if (optionsPanel != null)
         {
-            options.gameObject.SetActive(true);
+            optionsPanel.SetActive(true);
             yield return WaitRealtime(1f);
             yield return Capture("options");
-            options.gameObject.SetActive(false);
+            optionsPanel.SetActive(false);
         }
 
         // Every level, with the pause menu in the first one.
@@ -98,6 +99,18 @@ public class SmokeTestRunner : MonoBehaviour
         yield return Capture("credits");
 
         Finish();
+    }
+
+    /// <summary>The visible panel of the options prefab (a sibling of the objects holding the settings scripts).</summary>
+    private static GameObject FindOptionsPanel()
+    {
+        SettingsMenu settings = FindObjectOfType<SettingsMenu>(true);
+        for (Transform t = settings != null ? settings.transform : null; t != null; t = t.parent)
+        {
+            Transform panel = t.Find("OptionsPanel");
+            if (panel != null) return panel.gameObject;
+        }
+        return null;
     }
 
     private IEnumerator PauseAndResume()

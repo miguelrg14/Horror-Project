@@ -31,16 +31,18 @@ namespace Horror.Tests
         }
 
         [UnityTest]
-        public IEnumerator MainMenu_StartsTheLoopingMenuMusic()
+        public IEnumerator MainMenu_HasALoopingThemeOnTheMusicChannel()
         {
             yield return LoadScene("Menu");
 
-            Component music = GameTypes.Find("PlayerMusicManager");
-            Assert.IsNotNull(music, "The menu has a music channel.");
-            var current = (AudioSource)GameTypes.Get(music, "Current");
-            Assert.IsNotNull(current, "Menu music was started.");
-            Assert.IsNotNull(current.clip);
-            Assert.IsTrue(current.loop, "The menu theme loops instead of being cut after one play.");
+            GameObject menuMusic = GameObject.Find("MenuMusic");
+            Assert.IsNotNull(menuMusic, "The menu scene has its theme.");
+            var source = menuMusic.GetComponent<AudioSource>();
+            Assert.IsNotNull(source.clip);
+            Assert.IsTrue(source.loop);
+            Assert.IsTrue(source.playOnAwake);
+            Assert.IsNotNull(source.outputAudioMixerGroup, "The theme goes through the mixer so the music slider controls it.");
+            StringAssert.Contains("Music", source.outputAudioMixerGroup.name);
         }
 
         [UnityTest]
@@ -74,17 +76,23 @@ namespace Horror.Tests
             var pick = (AudioSource)GameTypes.Call(sfx, "PlaySFX", "pickKey");
             Assert.IsNotNull(pick);
             Assert.IsFalse(pick.loop, "One-shot sounds do not inherit the template's loop flag.");
-            // CI machines have no sound card; without an output device nothing ever "plays".
-            Assume.That(pick.isPlaying, "No audio output device available.");
+            Assert.IsNotNull(pick.clip);
 
-            float timeout = pick.clip.length + 2f;
+            // Let it start, then end it (CI machines have no sound card, so clips never finish on their own).
+            yield return null;
             GameObject voice = pick.gameObject;
-            while (voice != null && timeout > 0f)
-            {
-                timeout -= Time.unscaledDeltaTime;
-                yield return null;
-            }
-            Assert.IsTrue(voice == null, "The sound object removes itself when the clip ends.");
+            pick.Stop();
+            yield return null;
+            yield return null;
+            Assert.IsTrue(voice == null, "The sound object removes itself once its clip has stopped.");
+
+            var loop = (AudioSource)GameTypes.Call(sfx, "PlaySFX", "heartBeat2");
+            GameTypes.Call(sfx, "Loop");
+            yield return null;
+            Assert.IsTrue(loop != null && loop.loop, "Loop() keeps the last sound playing.");
+            GameTypes.Call(sfx, "Stop");
+            yield return null;
+            Assert.IsTrue(loop == null, "Stop() removes the looping sound.");
 
             LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("no sound called 'doesNotExist'"));
             Assert.IsNull(GameTypes.Call(sfx, "PlaySFX", "doesNotExist"));
