@@ -144,7 +144,7 @@ tests/Core.Tests/     runs the EditMode tests with plain .NET (no Unity licence 
 | Suite | What it covers | Where it runs |
 |---|---|---|
 | EditMode (NUnit) | `SoundBank`, `VolumeMath`, `GameSettings`, `PauseStateMachine`, `CountdownTimer`, `ResolutionOptions`, `FootstepRules` | Unity Test Runner and `dotnet test tests/Core.Tests` |
-| PlayMode | Loads the real scenes: menu theme starts and loops, pause/resume with Escape, one-shot sounds clean up, credits return to the menu | Unity Test Runner |
+| PlayMode | Loads the real scenes: the menu theme loops through the music mixer group, pause/resume with Escape, one-shot and looping sounds clean up, credits return to the menu | Unity Test Runner |
 | Smoke test | A real Linux build is started under a virtual display with `-smoke-test`: menu, options, all three levels, pause menu, credits; screenshots are saved and any logged error fails the run | CI |
 
 ```bash

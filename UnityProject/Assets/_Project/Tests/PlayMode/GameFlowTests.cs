@@ -82,8 +82,8 @@ namespace Horror.Tests
             yield return null;
             GameObject voice = pick.gameObject;
             pick.Stop();
-            yield return null;
-            yield return null;
+            float deadline = Time.realtimeSinceStartup + 1f; // > AudioAutoDestroy.StartGracePeriod
+            while (voice != null && Time.realtimeSinceStartup < deadline) yield return null;
             Assert.IsTrue(voice == null, "The sound object removes itself once its clip has stopped.");
 
             var loop = (AudioSource)GameTypes.Call(sfx, "PlaySFX", "heartBeat2");
