@@ -3,7 +3,7 @@
 #   Unity tests  EditMode + PlayMode tests in the editor
 #   Builds       Linux, Windows and WebGL players
 #   Smoke test   plays the Linux build headless through every scene and keeps the screenshots
-#   Pages        publishes the WebGL build (pushes to main only)
+#   Pages        publishes the WebGL build (main only: on push or when run by hand)
 #
 # Required repository secrets (Settings > Secrets and variables > Actions):
 #   UNITY_LICENSE, UNITY_EMAIL, UNITY_PASSWORD  (see https://game.ci/docs/github/activation)
@@ -227,7 +227,7 @@ jobs:
   pages:
     name: Deploy WebGL to GitHub Pages
     needs: [core-tests, unity-tests, unity-build, smoke-test]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
