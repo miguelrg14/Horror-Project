@@ -69,6 +69,16 @@ jobs:
           path: ${{ env.PROJECT_PATH }}/Library
           key: Library-test-${{ hashFiles('UnityProject/Assets/**', 'UnityProject/Packages/**', 'UnityProject/ProjectSettings/**') }}
           restore-keys: Library-test-
+      # The test runner only activates a personal licence with email, password and serial; the
+      # builder reads the serial from UNITY_LICENSE by itself, so it is extracted here the same way.
+      - name: Read the licence serial
+        id: licence
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          serial=$(printf '%s' "$UNITY_LICENSE" | tr -d '\r' | grep -oP '<DeveloperData Value="\K[^"]+' | base64 --decode | cut -c 5-)
+          echo "::add-mask::$serial"
+          echo "serial=$serial" >> "$GITHUB_OUTPUT"
       # The editor is occasionally killed while starting (exit code 137). Only in that case, when
       # no test results were written, the run is repeated once; real test failures fail the job.
       - uses: game-ci/unity-test-runner@v4
@@ -78,6 +88,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ steps.licence.outputs.serial }}
         with:
           projectPath: ${{ env.PROJECT_PATH }}
           testMode: all
@@ -90,6 +101,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ steps.licence.outputs.serial }}
         with:
           projectPath: ${{ env.PROJECT_PATH }}
           testMode: all
@@ -186,15 +198,26 @@ jobs:
           xvfb-run -a -s "-screen 0 1600x900x24" game/${{ env.BUILD_NAME }} \
             -force-glcore -screen-fullscreen 0 -screen-width 1600 -screen-height 900 \
             -logFile smoke-output/player.log -smoke-test smoke-output
-      - name: Summary
+      - name: Report
         if: always()
         run: |
-          {
-            echo "## Smoke test"
-            echo '```'
-            cat smoke-output/smoke-results.txt 2>/dev/null || echo "No results were written; see player.log."
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          results=$(cat smoke-output/smoke-results.txt 2>/dev/null || echo "No results were written; see player.log.")
+          echo "$results"
+          echo "--- errors and exceptions in player.log ---"
+          grep -n -A3 -E "Exception|Error|error" smoke-output/player.log | head -200 || true
+          { echo "## Smoke test"; echo '```'; echo "$results"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      # Small JPEG copies of the screenshots, printed to the log so they can be read without
+      # downloading the artifact (the full-size PNGs are in the artifact).
+      - name: Screenshot previews
+        if: always()
+        run: |
+          shopt -s nullglob
+          for f in smoke-output/*.png; do
+            convert "$f" -resize 1280x -quality 85 "${f%.png}.jpg"
+            echo "=== BEGIN $(basename "${f%.png}").jpg"
+            base64 -w 0 "${f%.png}.jpg"; echo
+            echo "=== END"
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
