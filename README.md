@@ -17,13 +17,13 @@ final door.
 [latest release](https://github.com/miguelrg14/Horror-Project/releases/latest).
 The original team page is on [itch.io](https://lucasgarcia002.itch.io/horror-project).
 
-![Main menu](docs/screenshots/01-main-menu.png)
+![Main menu](docs/screenshots/01-main-menu.jpg)
 
 | Level 1 | Pause menu |
 |---|---|
-| ![Level 1](docs/screenshots/03-level1.png) | ![Pause menu](docs/screenshots/04-pause-menu.png) |
-| **Options** | **Level 3** |
-| ![Options](docs/screenshots/02-options.png) | ![Level 3](docs/screenshots/06-level3.png) |
+| ![Level 1](docs/screenshots/03-level1.jpg) | ![Pause menu](docs/screenshots/04-pause-menu.jpg) |
+| **Options** | **Level 2** |
+| ![Options](docs/screenshots/02-options.jpg) | ![Level 2](docs/screenshots/05-level2.jpg) |
 
 *Screenshots are taken automatically by the CI smoke test from a real Linux build.*
 
