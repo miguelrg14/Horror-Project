@@ -16,8 +16,8 @@ UnityProject/Assets/InitTestScene*.unity*
 .vs/
 .vscode/
 .idea/
-*.csproj
-*.sln
+UnityProject/*.csproj
+UnityProject/*.sln
 *.suo
 *.user
 *.userprefs
