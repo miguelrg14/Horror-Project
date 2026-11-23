@@ -3,8 +3,8 @@
 [![CI](https://github.com/miguelrg14/Horror-Project/actions/workflows/ci.yml/badge.svg)](https://github.com/miguelrg14/Horror-Project/actions/workflows/ci.yml)
 [![Play in the browser](https://img.shields.io/badge/play-in%20the%20browser-8b0000)](https://miguelrg14.github.io/Horror-Project/)
 [![Release](https://img.shields.io/github/v/release/miguelrg14/Horror-Project?label=download)](https://github.com/miguelrg14/Horror-Project/releases/latest)
-![Unity 2020.3](https://img.shields.io/badge/Unity-2020.3%20LTS-black?logo=unity)
-![C#](https://img.shields.io/badge/C%23-8.0-239120?logo=csharp)
+![Unity 6](https://img.shields.io/badge/Unity-6000.6-black?logo=unity)
+![C#](https://img.shields.io/badge/C%23-239120?logo=csharp)
 
 First-person horror prototype made in Unity by a team of three students during the second year
 of the Video Game Design & Development degree at ESNE. It was shown at **CometCon Gijón 2022**.
@@ -70,6 +70,7 @@ The game was cleaned up years after the course; the gameplay is the same.
 - **Clean-up** – removed a paid third-party lightmapper, unused scenes, dead scripts and the source art
   files; textures downscaled to their import size and long WAV files converted to Ogg. The project went
   from about 4 GB to ~390 MB and no longer needs Git LFS.
+- **Unity 6** – the project was upgraded from Unity 2020.3 LTS to Unity 6.
 - **Tests and CI** – unit tests, play-mode tests, builds for three platforms, a headless smoke test and
   automatic deployment of the WebGL build.
 
@@ -91,7 +92,7 @@ The game was cleaned up years after the course; the gameplay is the same.
 
 - **Browser:** <https://miguelrg14.github.io/Horror-Project/> (desktop browser; click the game to capture the mouse).
 - **Windows / Linux:** download the zip from the [latest release](https://github.com/miguelrg14/Horror-Project/releases/latest), unzip and run `HorrorProject.exe` or `./HorrorProject`.
-- **Editor:** open `UnityProject/` with **Unity 2020.3.27f1** and play the `Menu` scene
+- **Editor:** open `UnityProject/` with **Unity 6 (6000.6.8f1)** and play the `Menu` scene
   (`Assets/_Project/Scenes`). Every asset is in plain Git, so a normal clone or *Download ZIP* is enough.
 
 ## Project structure
