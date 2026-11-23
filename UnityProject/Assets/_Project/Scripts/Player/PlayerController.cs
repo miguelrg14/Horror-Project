@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using HorrorProject.Core;
 using UnityEngine;
-using UnityEngine.UI;
-
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,44 +15,44 @@ public class PlayerController : MonoBehaviour
     [Header("Walking properties")]
     [SerializeField] private AudioSource stepAudio;
 
-    // Start is called before the first frame update
+    private readonly System.Random stepRandom = new System.Random();
+
     void Awake()
     {
-       rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        /// Movimiento con translate
+        // Movement: input on the XZ plane, clamped so diagonals are not faster.
         velocity = new Vector3(inputPlayer.x, 0, inputPlayer.y);
-
-
-        /// Movimiento con
         velocity = Vector3.ClampMagnitude(velocity, 1) * speed;
-        // "Z" Hacia delante, "X" lateral y "Y" frontal
+        // Z is forward, X is sideways and Y keeps the current vertical speed (gravity).
         rb.velocity = transform.right * velocity.x +
                       transform.up * rb.velocity.y +
                       transform.forward * velocity.z;
 
-        if(inputPlayer.x+inputPlayer.y!=0)
-        {
-            isMoving = true;
-        }
-        else
-        {
-            isMoving = false;
-        }
+        // Diagonals such as (1, -1) also count as moving.
+        isMoving = FootstepRules.IsMoving(inputPlayer.x, inputPlayer.y);
 
-        /// Movement sound (Steps...)
-        // if player is moving and audiosource is not playing play it
+        UpdateFootsteps();
+    }
+
+    /// <summary>Loops the footstep clip while walking, varying volume and pitch on every step.</summary>
+    private void UpdateFootsteps()
+    {
+        if (stepAudio == null) return;
+
         if (isMoving && !stepAudio.isPlaying)
         {
-            stepAudio.volume = Random.Range(0.8f, 1f);
-            stepAudio.pitch = Random.Range(0.8f, 1.1f);
+            (float volume, float pitch) = FootstepRules.RandomStep(stepRandom);
+            stepAudio.volume = volume;
+            stepAudio.pitch = pitch;
             stepAudio.Play();
         }
-        // if player is not moving and audiosource is playing stop it
-        if (!isMoving) stepAudio.Stop(); 
+        else if (!isMoving && stepAudio.isPlaying)
+        {
+            stepAudio.Stop();
+        }
     }
 }
