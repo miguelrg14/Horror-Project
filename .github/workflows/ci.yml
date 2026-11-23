@@ -1,0 +1,225 @@
+# Continuous integration.
+#   Core tests   engine-independent game logic with dotnet test (no Unity licence needed)
+#   Unity tests  EditMode + PlayMode tests in the editor
+#   Builds       Linux, Windows and WebGL players
+#   Smoke test   plays the Linux build headless through every scene and keeps the screenshots
+#   Pages        publishes the WebGL build (pushes to main only)
+#
+# Required repository secrets (Settings > Secrets and variables > Actions):
+#   UNITY_LICENSE, UNITY_EMAIL, UNITY_PASSWORD  (see https://game.ci/docs/github/activation)
+# GitHub Pages must be set to "Source: GitHub Actions" (Settings > Pages).
+
+name: CI
+
+on:
+  push:
+    branches: [main, portfolio-refresh]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROJECT_PATH: UnityProject
+  BUILD_NAME: HorrorProject
+
+jobs:
+  core-tests:
+    name: Core tests (.NET)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Test
+        run: >
+          dotnet test tests/Core.Tests -c Release
+          --logger "trx" --logger "console;verbosity=normal" --results-directory TestResults
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-test-results
+          path: TestResults
+
+  unity-tests:
+    name: Unity tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.PROJECT_PATH }}/Library
+          key: Library-test-${{ hashFiles('UnityProject/Assets/**', 'UnityProject/Packages/**', 'UnityProject/ProjectSettings/**') }}
+          restore-keys: Library-test-
+      # The editor is occasionally killed while starting (exit code 137). Only in that case, when
+      # no test results were written, the run is repeated once; real test failures fail the job.
+      - uses: game-ci/unity-test-runner@v4
+        id: tests
+        continue-on-error: true
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          testMode: all
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity test results
+      - uses: game-ci/unity-test-runner@v4
+        id: tests-retry
+        if: steps.tests.outcome == 'failure' && hashFiles('artifacts/*.xml') == ''
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          testMode: all
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity test results (retry)
+      - name: Fail if the tests failed
+        if: steps.tests.outcome == 'failure' && steps.tests-retry.outcome != 'success'
+        run: exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unity-test-results
+          path: artifacts
+
+  unity-build:
+    name: Build ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform: [StandaloneLinux64, StandaloneWindows64, WebGL]
+    steps:
+      - uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+      # Linking the web player can exceed the runner's RAM (exit code 137) without extra swap.
+      - name: Add swap space
+        run: |
+          sudo swapoff -a
+          sudo rm -f /mnt/swapfile
+          sudo fallocate -l 12G /mnt/swapfile
+          sudo chmod 600 /mnt/swapfile
+          sudo mkswap /mnt/swapfile
+          sudo swapon /mnt/swapfile
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.PROJECT_PATH }}/Library
+          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('UnityProject/Assets/**', 'UnityProject/Packages/**', 'UnityProject/ProjectSettings/**') }}
+          restore-keys: Library-${{ matrix.targetPlatform }}-
+      # The editor is occasionally killed while starting (exit code 137); one retry absorbs it.
+      - uses: game-ci/unity-builder@v4
+        id: build
+        continue-on-error: true
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildName: ${{ env.BUILD_NAME }}
+          versioning: None
+      - uses: game-ci/unity-builder@v4
+        if: steps.build.outcome == 'failure'
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildName: ${{ env.BUILD_NAME }}
+          versioning: None
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+          retention-days: 7
+
+  smoke-test:
+    name: Smoke test (Linux build)
+    needs: unity-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-StandaloneLinux64
+          path: game
+      - name: Install a virtual display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb libgl1-mesa-dri libglu1-mesa
+          chmod +x game/${{ env.BUILD_NAME }}
+          mkdir -p smoke-output
+      - name: Play through the menu, every level and the credits
+        run: |
+          xvfb-run -a -s "-screen 0 1600x900x24" game/${{ env.BUILD_NAME }} \
+            -force-glcore -screen-fullscreen 0 -screen-width 1600 -screen-height 900 \
+            -logFile smoke-output/player.log -smoke-test smoke-output
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Smoke test"
+            echo '```'
+            cat smoke-output/smoke-results.txt 2>/dev/null || echo "No results were written; see player.log."
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-test-output
+          path: smoke-output
+
+  pages:
+    name: Deploy WebGL to GitHub Pages
+    needs: [core-tests, unity-tests, unity-build, smoke-test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-WebGL
+          path: webgl
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: webgl/${{ env.BUILD_NAME }}
+      - uses: actions/deploy-pages@v4
+        id: deployment
