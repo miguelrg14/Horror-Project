@@ -34,17 +34,17 @@ public class GameManager : MonoBehaviour
 
         if (actualLevel==1)
         {
-            SceneManager.LoadScene("Escenario 1");
+            SceneManager.LoadScene("Level1");
 
         }
         else if (actualLevel==2)
         {
-            SceneManager.LoadScene("Escenario 2");
+            SceneManager.LoadScene("Level2");
 
         }
         else if (actualLevel == 3)
         {
-            SceneManager.LoadScene("Escenario 3");
+            SceneManager.LoadScene("Level3");
         }
 
     }
