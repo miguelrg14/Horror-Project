@@ -1,6 +1,6 @@
 using System;
 
-namespace HorrorProject.Core
+namespace Horror.Core
 {
     /// <summary>
     /// Converts between the 0-1 values shown on the volume sliders and the decibels an AudioMixer expects.

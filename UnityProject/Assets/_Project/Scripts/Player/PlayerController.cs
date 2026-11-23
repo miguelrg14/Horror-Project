@@ -1,4 +1,4 @@
-using HorrorProject.Core;
+using Horror.Core;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour

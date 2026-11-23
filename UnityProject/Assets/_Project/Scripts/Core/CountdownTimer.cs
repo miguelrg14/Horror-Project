@@ -1,6 +1,6 @@
 using System;
 
-namespace HorrorProject.Core
+namespace Horror.Core
 {
     /// <summary>Counts down once and reports the frame it reaches zero (used by the credits screen).</summary>
     public sealed class CountdownTimer

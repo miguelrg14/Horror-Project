@@ -1,4 +1,4 @@
-namespace HorrorProject.Core
+namespace Horror.Core
 {
     public enum PauseState
     {

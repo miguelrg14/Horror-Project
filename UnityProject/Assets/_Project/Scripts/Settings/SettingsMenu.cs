@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using HorrorProject.Core;
+using Horror.Core;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;

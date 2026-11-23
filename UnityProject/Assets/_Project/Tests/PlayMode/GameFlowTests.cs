@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace HorrorProject.Tests
+namespace Horror.Tests
 {
     /// <summary>Loads the real scenes and checks the menus, the pause flow, the audio channels and the credits.</summary>
     public class GameFlowTests

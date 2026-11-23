@@ -1,6 +1,6 @@
 {
     "name": "HorrorProject.Core",
-    "rootNamespace": "HorrorProject.Core",
+    "rootNamespace": "Horror.Core",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

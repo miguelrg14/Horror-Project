@@ -1,6 +1,6 @@
 {
     "name": "HorrorProject.Tests.EditMode",
-    "rootNamespace": "HorrorProject.Tests",
+    "rootNamespace": "Horror.Tests",
     "references": [
         "HorrorProject.Core",
         "UnityEngine.TestRunner",

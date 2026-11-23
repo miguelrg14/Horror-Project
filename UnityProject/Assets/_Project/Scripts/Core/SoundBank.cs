@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HorrorProject.Core
+namespace Horror.Core
 {
     /// <summary>
     /// Maps the sound names used by gameplay code ("pickKey", "menu"...) to clips.

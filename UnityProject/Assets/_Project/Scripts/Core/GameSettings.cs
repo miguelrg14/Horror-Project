@@ -1,6 +1,6 @@
 using System;
 
-namespace HorrorProject.Core
+namespace Horror.Core
 {
     /// <summary>Key-value storage behind the settings (PlayerPrefs in the game, a dictionary in tests).</summary>
     public interface ISettingsStorage

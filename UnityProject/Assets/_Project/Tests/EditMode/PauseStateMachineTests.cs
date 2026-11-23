@@ -1,7 +1,7 @@
-using HorrorProject.Core;
+using Horror.Core;
 using NUnit.Framework;
 
-namespace HorrorProject.Tests
+namespace Horror.Tests
 {
     public class PauseStateMachineTests
     {

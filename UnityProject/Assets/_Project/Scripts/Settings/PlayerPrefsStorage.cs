@@ -1,4 +1,4 @@
-using HorrorProject.Core;
+using Horror.Core;
 using UnityEngine;
 
 /// <summary>Stores the game settings in PlayerPrefs.</summary>

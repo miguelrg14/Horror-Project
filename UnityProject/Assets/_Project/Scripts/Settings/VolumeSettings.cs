@@ -1,4 +1,4 @@
-using HorrorProject.Core;
+using Horror.Core;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Serialization;

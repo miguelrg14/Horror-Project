@@ -1,6 +1,6 @@
 using System;
 
-namespace HorrorProject.Core
+namespace Horror.Core
 {
     /// <summary>When footsteps play and how each step is varied so the loop does not sound mechanical.</summary>
     public static class FootstepRules

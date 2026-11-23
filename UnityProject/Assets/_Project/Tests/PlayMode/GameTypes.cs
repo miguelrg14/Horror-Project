@@ -3,7 +3,7 @@ using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace HorrorProject.Tests
+namespace Horror.Tests
 {
     /// <summary>
     /// The game scripts live in Assembly-CSharp, which test assemblies cannot reference,

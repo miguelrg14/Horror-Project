@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace HorrorProject.Core
+namespace Horror.Core
 {
     public readonly struct ScreenSize
     {
