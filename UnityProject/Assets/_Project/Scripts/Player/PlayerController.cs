@@ -28,8 +28,8 @@ public class PlayerController : MonoBehaviour
         velocity = new Vector3(inputPlayer.x, 0, inputPlayer.y);
         velocity = Vector3.ClampMagnitude(velocity, 1) * speed;
         // Z is forward, X is sideways and Y keeps the current vertical speed (gravity).
-        rb.velocity = transform.right * velocity.x +
-                      transform.up * rb.velocity.y +
+        rb.linearVelocity = transform.right * velocity.x +
+                      transform.up * rb.linearVelocity.y +
                       transform.forward * velocity.z;
 
         // Diagonals such as (1, -1) also count as moving.
