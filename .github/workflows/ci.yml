@@ -190,7 +190,7 @@ jobs:
       - name: Install a virtual display
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb libgl1-mesa-dri libglu1-mesa
+          sudo apt-get install -y -qq xvfb libgl1-mesa-dri libglu1-mesa imagemagick
           chmod +x game/${{ env.BUILD_NAME }}
           mkdir -p smoke-output
       - name: Play through the menu, every level and the credits
