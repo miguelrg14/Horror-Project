@@ -1,91 +1,142 @@
-using System.Collections;
-using System.Collections.Generic;
+using HorrorProject.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
+/// <summary>
+/// In-game pause menu. Escape pauses and resumes the game; when the options panel is open,
+/// Escape goes back to the pause menu instead. While paused, time is stopped, the cursor is freed,
+/// the camera stops reading the mouse and a heartbeat loops in the background.
+/// </summary>
 public class PauseMenu : MonoBehaviour
 {
-    public static bool gameIsPaused = false;
-    public static bool optionsMenuOn = false;
+    public const string MainMenuScene = "Menu";
 
-    public GameObject pauseMenuUI;
+    /// <summary>True while the game is paused (pause menu or options panel open).</summary>
+    public static bool IsPaused { get; private set; }
 
-    public Transform Player;
+    [SerializeField] private GameObject pauseMenuUI;
+    [Tooltip("Options panel opened from the pause menu (optional).")]
+    [SerializeField] private GameObject optionsPanel;
+    [SerializeField, FormerlySerializedAs("Player")] private Transform player;
 
-    // Update is called once per frame
-    void Update()
+    private readonly PauseStateMachine state = new PauseStateMachine();
+    private AudioSource heartbeat;
+
+    public PauseState State => state.State;
+
+    private void Awake()
+    {
+        IsPaused = false;
+    }
+
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (gameIsPaused == true && optionsMenuOn == false)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            HandleEscape();
+        }
+        else if (state.State == PauseState.Options && optionsPanel != null && !optionsPanel.activeSelf)
+        {
+            // The options panel was closed with its own "Apply" button: show the pause menu again.
+            ApplyButton();
+        }
+    }
+
+    public void HandleEscape()
+    {
+        switch (state.State)
+        {
+            case PauseState.Playing: Pause(); break;
+            case PauseState.Paused: Resume(); break;
+            default: ApplyButton(); break;
+        }
+    }
+
+    public void Pause()
+    {
+        state.Pause();
+        SetPaused(true);
+        if (optionsPanel != null) optionsPanel.SetActive(false);
+        SetMenuVisible(true);
+
+        PlayerUIManager.instance?.PlayUI("enterMenu");
+        if (heartbeat == null && PlayerSFXManager.instance != null)
+        {
+            heartbeat = PlayerSFXManager.instance.PlaySFX("heartBeat2");
+            if (heartbeat != null) heartbeat.loop = true;
         }
     }
 
     public void Resume()
     {
-        Time.timeScale = 1f;
-        gameIsPaused = false;
-        optionsMenuOn = false;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        pauseMenuUI.SetActive(false);
-        Player.GetComponent<FPSCamera>().enabled = true;
+        state.Resume();
+        SetPaused(false);
+        if (optionsPanel != null) optionsPanel.SetActive(false);
+        SetMenuVisible(false);
 
-        PlayerUIManager.instance.PlayUI("enterMenu");
-        PlayerSFXManager.instance.Stop();
-        //AudioListener.volume = 1;
+        PlayerUIManager.instance?.PlayUI("enterMenu");
+        StopHeartbeat();
     }
-    public void KeepPause()
-    {
-        Time.timeScale = 0f;
-        gameIsPaused = true;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-        Player.GetComponent<FPSCamera>().enabled = false;
 
-        //AudioListener.volume = 0;
-    }
-    public void Pause()
-    {
-        Time.timeScale = 0f;
-        gameIsPaused = true;
-        optionsMenuOn = false;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-        pauseMenuUI.SetActive(true);
-        Player.GetComponent<FPSCamera>().enabled = false;
+    // Called by the "Options" button (which also shows the options panel).
+    public void LoadOptions() => state.OpenOptions();
 
-        PlayerUIManager.instance.PlayUI("enterMenu");
-        PlayerSFXManager.instance.PlaySFX("heartBeat2");
-        PlayerSFXManager.instance.Loop();
-
-        //AudioListener.volume = 0;
-    }
-    public void LoadOptions()
-    {
-        optionsMenuOn = true;
-    }
+    // Called when the options panel is closed.
     public void ApplyButton()
     {
-        optionsMenuOn = false;
+        if (state.State != PauseState.Options) return;
+        state.CloseOptions();
+        if (optionsPanel != null) optionsPanel.SetActive(false);
+        SetMenuVisible(true);
     }
+
     public void LoadMenu()
     {
-        Time.timeScale = 1f;
-        AudioListener.volume = 1;
-        Player.GetComponent<FPSCamera>().enabled = true;
-
-        SceneManager.LoadScene("Menu");
+        StopHeartbeat();
+        state.Resume();
+        SetPaused(false);
+        SceneManager.LoadScene(MainMenuScene);
     }
+
     public void QuitMenu()
     {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
+    }
+
+    private void OnDestroy()
+    {
+        // Leaving the scene while paused must not leave the next scene frozen.
+        if (state.IsPaused) Time.timeScale = 1f;
+        IsPaused = false;
+    }
+
+    private void SetPaused(bool paused)
+    {
+        IsPaused = paused;
+        Time.timeScale = paused ? 0f : 1f;
+        Cursor.visible = paused;
+        Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
+
+        if (player != null)
+        {
+            FPSCamera fpsCamera = player.GetComponent<FPSCamera>();
+            if (fpsCamera != null) fpsCamera.enabled = !paused;
+        }
+    }
+
+    private void SetMenuVisible(bool visible)
+    {
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(visible);
+    }
+
+    private void StopHeartbeat()
+    {
+        PlayerSFXManager.Stop(heartbeat);
+        heartbeat = null;
     }
 }

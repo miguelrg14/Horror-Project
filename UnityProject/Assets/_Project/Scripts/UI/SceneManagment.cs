@@ -86,17 +86,17 @@ public class SceneManagment : MonoBehaviour  // lo uso tanto para desbloquear ni
         else if (nivel == 1)
         {
             yield return new WaitForSeconds(2f);
-            SceneManager.LoadScene("Escenario 1");
+            SceneManager.LoadScene("Level1");
         }
         else if (nivel == 2)
         {
             yield return new WaitForSeconds(2f);
-            SceneManager.LoadScene("Escenario 2");
+            SceneManager.LoadScene("Level2");
         }
         else if (nivel == 3)
         {
             yield return new WaitForSeconds(2f);
-            SceneManager.LoadScene("Escenario 3");
+            SceneManager.LoadScene("Level3");
         }
         // Creditos
         else if (nivel == 6)

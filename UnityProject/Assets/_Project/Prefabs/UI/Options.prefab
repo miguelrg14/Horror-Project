@@ -3186,15 +3186,15 @@ MonoBehaviour:
   m_FillRect: {fileID: 1902286731513762805}
   m_HandleRect: {fileID: 1902286731535929084}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 0
+  m_MinValue: 0
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1902286732253477730}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: VolumeSettings, Assembly-CSharp
         m_MethodName: SetMusic
         m_Mode: 0
         m_Arguments:
@@ -3725,7 +3725,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Sensivity
+  m_Text: Sensitivity
 --- !u!1 &1902286732287111352
 GameObject:
   m_ObjectHideFlags: 0
@@ -5018,15 +5018,15 @@ MonoBehaviour:
   m_FillRect: {fileID: 1902286731549587661}
   m_HandleRect: {fileID: 1902286733057166550}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 0
+  m_MinValue: 0
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1902286732253477730}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: VolumeSettings, Assembly-CSharp
         m_MethodName: SetVolume
         m_Mode: 0
         m_Arguments:
@@ -6115,15 +6115,15 @@ MonoBehaviour:
   m_FillRect: {fileID: 1902286732342611749}
   m_HandleRect: {fileID: 1902286731398775684}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 0
+  m_MinValue: 0
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1902286732253477730}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: VolumeSettings, Assembly-CSharp
         m_MethodName: SetSFX
         m_Mode: 0
         m_Arguments:
@@ -6297,9 +6297,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1902286731848663549}
   m_Direction: 1
   m_MinValue: 0
-  m_MaxValue: 0.8
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -6599,7 +6599,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 1902286732973717363}
   m_HandleRect: {fileID: 1902286731837260570}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.5
   m_MaxValue: 8
   m_WholeNumbers: 0
   m_Value: 5
@@ -7961,15 +7961,15 @@ MonoBehaviour:
   m_FillRect: {fileID: 3441605360279325156}
   m_HandleRect: {fileID: 6235690684707168497}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 0
+  m_MinValue: 0
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1902286732253477730}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: VolumeSettings, Assembly-CSharp
         m_MethodName: SetVoice
         m_Mode: 0
         m_Arguments:
@@ -8224,11 +8224,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioMixer: {fileID: 24100000, guid: 77872c3ab05487f4a9813f77623a6e32, type: 2}
-  GeneralVolumeSlider: {fileID: 1902286732658371534}
-  MusicVolumeSlider: {fileID: 1902286731906036348}
-  EffectsVolumeSlider: {fileID: 1902286732979548377}
-  UIVolumeSlider: {fileID: 7943979850962694019}
-  VoiceVolumeSlider: {fileID: 5718672360099705021}
+  masterSlider: {fileID: 1902286732658371534}
+  musicSlider: {fileID: 1902286731906036348}
+  effectsSlider: {fileID: 1902286732979548377}
+  interfaceSlider: {fileID: 7943979850962694019}
+  voiceSlider: {fileID: 5718672360099705021}
 --- !u!1 &4936530502323116816
 GameObject:
   m_ObjectHideFlags: 0
@@ -9671,15 +9671,15 @@ MonoBehaviour:
   m_FillRect: {fileID: 7600391458562652269}
   m_HandleRect: {fileID: 7810502119768253241}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 0
+  m_MinValue: 0
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1902286732253477730}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: VolumeSettings, Assembly-CSharp
         m_MethodName: SetUI
         m_Mode: 0
         m_Arguments:
@@ -10493,8 +10493,8 @@ MonoBehaviour:
   resolutionDropdown: {fileID: 1902286731096180364}
   qualityDropdown: {fileID: 1902286732863832336}
   brightnessSlider: {fileID: 1902286733008807997}
-  brightnesspanel: {fileID: 5808292083176490953}
-  sensivitySlider: {fileID: 1902286733088140283}
+  brightnessOverlay: {fileID: 5808292083176490953}
+  sensitivitySlider: {fileID: 1902286733088140283}
 --- !u!1 &8942999697721349831
 GameObject:
   m_ObjectHideFlags: 0

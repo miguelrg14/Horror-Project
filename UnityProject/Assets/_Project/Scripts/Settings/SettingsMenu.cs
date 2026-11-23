@@ -1,110 +1,112 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using HorrorProject.Core;
 using UnityEngine;
-using UnityEngine.Audio;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+/// <summary>
+/// Display and control options of the options panel (shared by the main menu and the pause menu):
+/// resolution, quality, fullscreen, brightness and mouse sensitivity.
+/// </summary>
 public class SettingsMenu : MonoBehaviour
 {
-    // Fullscreen
-    public Toggle fullscreenToggle;
+    [SerializeField] private Toggle fullscreenToggle;
+    [SerializeField] private Dropdown resolutionDropdown;
+    [SerializeField] private Dropdown qualityDropdown;
 
-    // Resolución
-    public Dropdown resolutionDropdown;
+    [Header("Brightness")]
+    [SerializeField] private Slider brightnessSlider;
+    [Tooltip("Black full-screen image whose alpha dims the picture.")]
+    [SerializeField, FormerlySerializedAs("brightnesspanel")] private Image brightnessOverlay;
 
-    Resolution[] resolutionsInfo;
+    [Header("Mouse")]
+    [SerializeField, FormerlySerializedAs("sensivitySlider")] private Slider sensitivitySlider;
 
-    // Calidad Visual
-    public Dropdown qualityDropdown;
+    private List<ScreenSize> resolutions = new List<ScreenSize>();
 
-    // Brillo
-    public Slider brightnessSlider;
-    protected float brightness;
-    public Image brightnesspanel;
-
-    // Sensibilidad (solo en el menú, tmb toco esto ingame en el movimiento d la cám ("FPS")
-    public Slider sensivitySlider;
-    protected float sensivity;
-
-    void Start()
+    private void Start()
     {
-        //fullscreenToggle.isOn = (PlayerPrefs.GetInt("fullscreen") == 1);        
-        resolutionDropdown.value = PlayerPrefs.GetInt("resolution");
-        qualityDropdown.value = PlayerPrefs.GetInt("quality");
-        brightnessSlider.value = PlayerPrefs.GetFloat("brightness");
-        //sensivitySlider.value = PlayerPrefs.GetFloat("sensivity");
+        GameSettings settings = SettingsService.Current;
+        BuildResolutionDropdown(settings);
 
-        // Cojo las resoluciones que están guardadas en Unity mediante un método interno
-        resolutionsInfo = Screen.resolutions;
-        // Elimino las posibles opciones que haya en el "dropdown" pa q no etorpezcan
-        resolutionDropdown.ClearOptions();
-
-        int currentResolutionIndex = 0;
-        // Creo una lista d strings con el array d resoluciones, ya que no puedo añadirlas
-        //  como array al "dropdown", sino como strings...
-        // Entonces, esta lista d strings funcionará como las opciones al final...
-        List<string> options = new List<string>();
-
-        // El for hace un loop en las resoluciones del array "resolutionsInfo", 
-        //  creando pa cada 1 d los elementos un string "volatileOption" para guardarlas y justo 
-        //  en la linea siguiente, añadirla a la lista "options"
-        for (int i = 0; i < resolutionsInfo.Length; i++)
+        if (qualityDropdown != null)
         {
-            string volatileOption = resolutionsInfo[i].width + " x " + resolutionsInfo[i].height + " p";
-            options.Add(volatileOption);
-
-            if (resolutionsInfo[i].width == Screen.currentResolution.width &&
-                resolutionsInfo[i].height == Screen.currentResolution.height)
-            {
-                currentResolutionIndex = i;
-            }
+            int quality = Mathf.Clamp(settings.GetQuality(QualitySettings.GetQualityLevel()), 0, QualitySettings.names.Length - 1);
+            qualityDropdown.SetValueWithoutNotify(quality);
+            QualitySettings.SetQualityLevel(quality);
         }
-        // Añado la lista al "dropdown"
-        resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = currentResolutionIndex;
-        resolutionDropdown.RefreshShownValue();
-    }
-    public void SetResolution (int resolutionIndex)
-    {
-        Resolution resolution = resolutionsInfo[resolutionIndex]; 
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-        PlayerPrefs.SetInt("resolution", resolutionIndex);
+
+        if (fullscreenToggle != null) fullscreenToggle.SetIsOnWithoutNotify(Screen.fullScreen);
+
+        if (brightnessSlider != null)
+        {
+            brightnessSlider.minValue = 0f;
+            brightnessSlider.maxValue = 1f;
+            brightnessSlider.SetValueWithoutNotify(settings.Brightness);
+        }
+        ApplyBrightness(settings.Brightness);
+
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.minValue = GameSettings.MinSensitivity;
+            sensitivitySlider.maxValue = GameSettings.MaxSensitivity;
+            sensitivitySlider.SetValueWithoutNotify(settings.Sensitivity);
+        }
     }
 
-    /// Control visual
-    public void SetQuality (int qualityIndex)
+    private void BuildResolutionDropdown(GameSettings settings)
     {
-        QualitySettings.SetQualityLevel(qualityIndex);
-        PlayerPrefs.SetInt("quality", qualityIndex);
+        if (resolutionDropdown == null) return;
+
+        resolutions = ResolutionOptions.Distinct(Screen.resolutions.Select(r => new ScreenSize(r.width, r.height)));
+        resolutionDropdown.ClearOptions();
+        resolutionDropdown.AddOptions(ResolutionOptions.Labels(resolutions));
+
+        // The options must exist before the current value is selected.
+        int current = ResolutionOptions.IndexOf(resolutions, Screen.width, Screen.height);
+        resolutionDropdown.SetValueWithoutNotify(Mathf.Max(0, current));
+        resolutionDropdown.RefreshShownValue();
+        // Changing the resolution is meaningless inside a browser page.
+        resolutionDropdown.interactable = Application.platform != RuntimePlatform.WebGLPlayer && resolutions.Count > 1;
     }
+
+    // UI callbacks (names kept from the original options prefab).
+    public void SetResolution(int index)
+    {
+        if (index < 0 || index >= resolutions.Count) return;
+        ScreenSize size = resolutions[index];
+        Screen.SetResolution(size.Width, size.Height, Screen.fullScreen);
+        SettingsService.Current.SetResolutionIndex(index);
+    }
+
+    public void SetQuality(int level)
+    {
+        QualitySettings.SetQualityLevel(level);
+        SettingsService.Current.SetQuality(level);
+    }
+
     public void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
-        //PlayerPrefs.SetInt("fullScreen", BoolToInt(isFullscreen));
-
-        // Save boolean using PlayerPrefs
-        PlayerPrefs.SetInt("fullscreen", isFullscreen ? 1 : 0);
+        SettingsService.Current.SetFullscreen(isFullscreen);
     }
+
     public void ChangeBrightness(float value)
     {
-        brightness = value;
-        PlayerPrefs.SetFloat("brightness", brightness);
-        brightnesspanel.color = new Color(brightnesspanel.color.r, brightnesspanel.color.g, brightnesspanel.color.b, brightnessSlider.value);
+        SettingsService.Current.Brightness = value;
+        ApplyBrightness(SettingsService.Current.Brightness);
     }
 
-    public void ChangeSensivityMainMenu(float value)
-    {
-        sensivity = value;
-        PlayerPrefs.SetFloat("sensivity", sensivity);
-    }
+    public void ChangeSensivityMainMenu(float value) => SettingsService.Current.Sensitivity = value;
 
-    private int BoolToInt(bool val)
-    {
-        return val ? 1 : 0;
-    }
+    private void OnDisable() => SettingsService.Current.Save();
 
-    private bool IntToBool(int val)
+    private void ApplyBrightness(float brightness)
     {
-        return val == 1;
+        if (brightnessOverlay == null) return;
+        Color color = brightnessOverlay.color;
+        color.a = GameSettings.OverlayAlpha(brightness);
+        brightnessOverlay.color = color;
     }
 }

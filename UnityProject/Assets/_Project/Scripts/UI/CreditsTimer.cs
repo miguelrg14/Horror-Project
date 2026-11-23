@@ -1,28 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
+using HorrorProject.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class TimerCredits : MonoBehaviour
+/// <summary>Returns to the main menu once the credits have been shown.</summary>
+public class CreditsTimer : MonoBehaviour
 {
-    private float maxTime = 10f;
-    private float countdown = 0f;
+    [SerializeField] private float duration = 10f;
+    [SerializeField] private string nextScene = PauseMenu.MainMenuScene;
 
-    // Start is called before the first frame update
-    void Start()
+    private CountdownTimer timer;
+
+    private void Start()
     {
-        countdown = maxTime;
+        timer = new CountdownTimer(duration);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        countdown -= Time.deltaTime;
-        Debug.Log("Tiempo restante: " + countdown);
-
-        if (countdown <= 0)
-        {
-            SceneManager.LoadScene("Menu");
-        }
+        if (timer.Tick(Time.deltaTime)) SceneManager.LoadScene(nextScene);
     }
 }
