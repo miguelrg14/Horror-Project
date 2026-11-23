@@ -82,9 +82,9 @@ public class InteractionMode : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        ChildPanelInventario.active = true;
-        ChildPanelLantern.active = true;
-        ChildPanelInventoryDescription.active = true;
+        ChildPanelInventario.SetActive(true);
+        ChildPanelLantern.SetActive(true);
+        ChildPanelInventoryDescription.SetActive(true);
 
 
         this.gameObject.GetComponent<FPSCamera>().enabled = false;
@@ -95,9 +95,9 @@ public class InteractionMode : MonoBehaviour
         panelViewObject.GetComponent<Image>().enabled = true;
         AcessInspectorMode(gameObjectItem);
 
-        ChildPanelInventario.active = false;
-        ChildPanelLantern.active = false;
-        ChildPanelInventoryDescription.active = false;
+        ChildPanelInventario.SetActive(false);
+        ChildPanelLantern.SetActive(false);
+        ChildPanelInventoryDescription.SetActive(false);
 
         itemInventaryActivated = true;
         isInInspector = false;
@@ -114,9 +114,9 @@ public class InteractionMode : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        ChildPanelInventario.active = true;
-        ChildPanelLantern.active = true;
-        ChildPanelInventoryDescription.active = true;
+        ChildPanelInventario.SetActive(true);
+        ChildPanelLantern.SetActive(true);
+        ChildPanelInventoryDescription.SetActive(true);
 
         itemInventaryActivated = false;
 
@@ -125,9 +125,9 @@ public class InteractionMode : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        ChildPanelInventario.active = false;
-        ChildPanelLantern.active = false;
-        ChildPanelInventoryDescription.active = false;
+        ChildPanelInventario.SetActive(false);
+        ChildPanelLantern.SetActive(false);
+        ChildPanelInventoryDescription.SetActive(false);
 
 
         this.gameObject.GetComponent<FPSCamera>().enabled = true;
@@ -136,7 +136,7 @@ public class InteractionMode : MonoBehaviour
     public void AcessMiniGameMode()
     {
         isInMiniGame = true;
-        canvasUnlockKey.active = true;
+        canvasUnlockKey.SetActive(true);
         canvasUnlockKey.GetComponentInChildren<RotateAround>().enabled = true;
         canvasUnlockKey.GetComponentInChildren<RotateAround>().ActivateRotation();
         this.gameObject.GetComponent<FPSCamera>().enabled = false;
@@ -147,7 +147,7 @@ public class InteractionMode : MonoBehaviour
     public void ExitMiniGameMode()
     {
         isInMiniGame = false;
-        canvasUnlockKey.active = false;
+        canvasUnlockKey.SetActive(false);
         canvasUnlockKey.GetComponentInChildren<RotateAround>().enabled = false;
         canvasUnlockKey.GetComponentInChildren<RotateAround>().ActivateRotation();
         this.gameObject.GetComponent<FPSCamera>().enabled = true;
