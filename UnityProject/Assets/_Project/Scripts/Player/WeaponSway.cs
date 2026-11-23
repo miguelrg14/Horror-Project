@@ -57,6 +57,14 @@ public class WeaponSway : MonoBehaviour
         playerInput.Enable();
     }
 
+    // Release the input actions (Unity 6 reports enabled action maps that are never disabled as a leak)
+    private void OnDisable()
+    {
+        playerInput?.Disable();
+        playerInput?.Dispose();
+        playerInput = null;
+    }
+
     private void Start()
     {
         initialPosition = transform.localPosition;
