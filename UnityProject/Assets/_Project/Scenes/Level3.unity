@@ -19710,7 +19710,7 @@ PrefabInstance:
       value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 7445919825473283080, guid: f3f1365d227741c4fb59462b96a8fbb1, type: 3}
-      propertyPath: Player
+      propertyPath: player
       value: 
       objectReference: {fileID: 1551680021}
     - target: {fileID: 7445919825473283081, guid: f3f1365d227741c4fb59462b96a8fbb1, type: 3}
@@ -43165,19 +43165,19 @@ PrefabInstance:
       value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 8422890210534331909, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: sfx_locked
+      propertyPath: locked
       value: 
       objectReference: {fileID: 8300000, guid: 1210ca02cd38e024ab24dbb0ccd13f42, type: 3}
     - target: {fileID: 8422890210534331909, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: sfx_switch
+      propertyPath: switchClick
       value: 
       objectReference: {fileID: 8300000, guid: 4d7a40f1663ad4f48a64f707f2ea78fc, type: 3}
     - target: {fileID: 8422890210534331909, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: sfx_openBag
+      propertyPath: openBag
       value: 
       objectReference: {fileID: 8300000, guid: f0e1299ecc2a6e64498209d1838913ac, type: 3}
     - target: {fileID: 8422890210534331909, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: sfx_woodStep
+      propertyPath: woodStep
       value: 
       objectReference: {fileID: 8300000, guid: 4f36617d91aa73743b51edbec4652db8, type: 3}
     - target: {fileID: 8422890210534331911, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
@@ -43201,29 +43201,17 @@ PrefabInstance:
       value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 8422890210847313617, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: music_menu
+      propertyPath: menu
       value: 
       objectReference: {fileID: 8300000, guid: 278e5bcbc68ea864f9987f880d890c56, type: 3}
     - target: {fileID: 8422890210847313617, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: music_organ
-      value: 
-      objectReference: {fileID: 8300000, guid: 893502ea210660a449e4c2c3f1f5bbe3, type: 3}
-    - target: {fileID: 8422890210847313617, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: music_future
-      value: 
-      objectReference: {fileID: 8300000, guid: 729c33c6acadd674d91ffd9fc3f8315b, type: 3}
-    - target: {fileID: 8422890210847313617, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: music_terrorPad
+      propertyPath: terrorPad
       value: 
       objectReference: {fileID: 8300000, guid: 5d61f59dc6321294cadeb6bc6985ba4f, type: 3}
     - target: {fileID: 8422890210847313617, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: music_persecution
+      propertyPath: persecution
       value: 
       objectReference: {fileID: 8300000, guid: 8738234fdf9beb1489a17c69d6fb3704, type: 3}
-    - target: {fileID: 8422890210847313617, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
-      propertyPath: music_backgroundAmbient
-      value: 
-      objectReference: {fileID: 8300000, guid: 661f86014b15ab34db86da2da2e9a983, type: 3}
     - target: {fileID: 8422890210847313619, guid: 7781d96c0c7f974419cfc555fac347f0, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295

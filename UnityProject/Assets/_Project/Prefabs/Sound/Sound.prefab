@@ -44,10 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f582c23388c5e345abdf14ef80209db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\xAA": 
-  sfx_openBag: {fileID: 0}
-  currentSFXObject: {fileID: 4602550571472830700, guid: c7b54cd9e4a69ad4894805a12f3067ef, type: 3}
-  referenceSoundObject: {fileID: 4602550571472830700, guid: c7b54cd9e4a69ad4894805a12f3067ef, type: 3}
+  openBag: {fileID: 0}
+  voiceTemplate: {fileID: 4602550571472830700, guid: c7b54cd9e4a69ad4894805a12f3067ef, type: 3}
 --- !u!1 &8422890210313807267
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,12 +90,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf9a058b1499e34d96cab5b3e72dcc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\xAA": 
-  ui_enterMenu: {fileID: 8300000, guid: 0c635b1335bcc0d418e42020f7ab19bb, type: 3}
-  ui_button1: {fileID: 8300000, guid: 7a5cbc5711c32bb4db32b7e3d2d00fcb, type: 3}
-  ui_button2: {fileID: 8300000, guid: 6872a1530d1dd9e47b9436e01dca36e2, type: 3}
-  currentUIObject: {fileID: 3874915441654862188, guid: 59a692b6c82f83f45b89eb144b49aa1f, type: 3}
-  referenceSoundObject: {fileID: 3874915441654862188, guid: 59a692b6c82f83f45b89eb144b49aa1f, type: 3}
+  enterMenu: {fileID: 8300000, guid: 0c635b1335bcc0d418e42020f7ab19bb, type: 3}
+  button1: {fileID: 8300000, guid: 7a5cbc5711c32bb4db32b7e3d2d00fcb, type: 3}
+  button2: {fileID: 8300000, guid: 6872a1530d1dd9e47b9436e01dca36e2, type: 3}
+  voiceTemplate: {fileID: 3874915441654862188, guid: 59a692b6c82f83f45b89eb144b49aa1f, type: 3}
 --- !u!1 &8422890210435773480
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,28 +168,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2d6c39e92d15c489484af7c9f83578, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\xAA": 
-  sfx_OpenDrawer: {fileID: 8300000, guid: d10d1c3645514ce4ca1756533c29317a, type: 3}
-  sfx_CloseDrawer: {fileID: 8300000, guid: ad37f50b7f6158a45b159464595a8dd4, type: 3}
-  sfx_lockpickOpened: {fileID: 8300000, guid: 956c16067d823414d8301e57bb678cc7, type: 3}
-  sfx_lockpickOpening: {fileID: 8300000, guid: f43a082fece1b324da52f4b61d91f3e7, type: 3}
-  sfx_woodStep: {fileID: 8300000, guid: 4f36617d91aa73743b51edbec4652db8, type: 3}
-  sfx_dontPick: {fileID: 8300000, guid: a6219ccba60d7cf42885e1b2e35e671c, type: 3}
-  sfx_pickLockpick: {fileID: 8300000, guid: d5a9296840202b549ab5fddeb54d5ef6, type: 3}
-  sfx_saveInInventory: {fileID: 8300000, guid: f4bd4fae9fb29ff469698ed49bcf6318, type: 3}
-  sfx_pickKey: {fileID: 8300000, guid: f040d11ba77905f4fbe65f1a631e8412, type: 3}
-  sfx_pickBattery: {fileID: 8300000, guid: f0c9824a82eeeb74380c394e3796a337, type: 3}
-  sfx_pickNote: {fileID: 8300000, guid: 74b818dca8ccd51419efb9ee38a27dfc, type: 3}
-  sfx_switch: {fileID: 8300000, guid: 4d7a40f1663ad4f48a64f707f2ea78fc, type: 3}
-  sfx_reloadLantern: {fileID: 8300000, guid: c0e2bf2a461a4ca438f28c59d4abdc29, type: 3}
-  sfx_switchLanternOn: {fileID: 8300000, guid: 2743c5cfc14120f45b83bbf1d810721b, type: 3}
-  sfx_openBag: {fileID: 8300000, guid: f0e1299ecc2a6e64498209d1838913ac, type: 3}
-  sfx_heartBeat1: {fileID: 8300000, guid: 771bc3c031aeb9f4c97e1bd126d4c9d1, type: 3}
-  sfx_heartBeat2: {fileID: 8300000, guid: 91fbb5d900e2ce740acb60003b276b23, type: 3}
-  sfx_locked: {fileID: 8300000, guid: 1210ca02cd38e024ab24dbb0ccd13f42, type: 3}
-  sfx_chains: {fileID: 8300000, guid: da5d0997fd2bcf947a5e78e56d416424, type: 3}
-  currentSFXObject: {fileID: 4800732646987270850, guid: bc123fc4d653dfc4196c76492642d0a9, type: 3}
-  referenceSoundObject: {fileID: 4800732646987270850, guid: bc123fc4d653dfc4196c76492642d0a9, type: 3}
+  openDrawer: {fileID: 8300000, guid: d10d1c3645514ce4ca1756533c29317a, type: 3}
+  closeDrawer: {fileID: 8300000, guid: ad37f50b7f6158a45b159464595a8dd4, type: 3}
+  lockpickOpened: {fileID: 8300000, guid: 956c16067d823414d8301e57bb678cc7, type: 3}
+  lockpickOpening: {fileID: 8300000, guid: f43a082fece1b324da52f4b61d91f3e7, type: 3}
+  woodStep: {fileID: 8300000, guid: 4f36617d91aa73743b51edbec4652db8, type: 3}
+  dontPick: {fileID: 8300000, guid: a6219ccba60d7cf42885e1b2e35e671c, type: 3}
+  pickLockpick: {fileID: 8300000, guid: d5a9296840202b549ab5fddeb54d5ef6, type: 3}
+  saveInInventory: {fileID: 8300000, guid: f4bd4fae9fb29ff469698ed49bcf6318, type: 3}
+  pickKey: {fileID: 8300000, guid: f040d11ba77905f4fbe65f1a631e8412, type: 3}
+  pickBattery: {fileID: 8300000, guid: f0c9824a82eeeb74380c394e3796a337, type: 3}
+  pickNote: {fileID: 8300000, guid: 74b818dca8ccd51419efb9ee38a27dfc, type: 3}
+  switchClick: {fileID: 8300000, guid: 4d7a40f1663ad4f48a64f707f2ea78fc, type: 3}
+  reloadLantern: {fileID: 8300000, guid: c0e2bf2a461a4ca438f28c59d4abdc29, type: 3}
+  switchLanternOn: {fileID: 8300000, guid: 2743c5cfc14120f45b83bbf1d810721b, type: 3}
+  openBag: {fileID: 8300000, guid: f0e1299ecc2a6e64498209d1838913ac, type: 3}
+  heartBeat1: {fileID: 8300000, guid: 771bc3c031aeb9f4c97e1bd126d4c9d1, type: 3}
+  heartBeat2: {fileID: 8300000, guid: 91fbb5d900e2ce740acb60003b276b23, type: 3}
+  locked: {fileID: 8300000, guid: 1210ca02cd38e024ab24dbb0ccd13f42, type: 3}
+  chains: {fileID: 8300000, guid: da5d0997fd2bcf947a5e78e56d416424, type: 3}
+  voiceTemplate: {fileID: 4800732646987270850, guid: bc123fc4d653dfc4196c76492642d0a9, type: 3}
 --- !u!1 &8422890210572793952
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,10 +296,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f233a9accdcb0249819c08afb6bfac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\xAA": 
-  v_ghostOnBack: {fileID: 8300000, guid: 312523c4186ab754492259f644813cbb, type: 3}
-  currentVoiceObject: {fileID: 3193842018796510017, guid: c753a99399774e346bf06ad2de4efbc4, type: 3}
-  referenceSoundObject: {fileID: 3193842018796510017, guid: c753a99399774e346bf06ad2de4efbc4, type: 3}
+  ghostOnBack: {fileID: 8300000, guid: 312523c4186ab754492259f644813cbb, type: 3}
+  voiceTemplate: {fileID: 3193842018796510017, guid: c753a99399774e346bf06ad2de4efbc4, type: 3}
 --- !u!1 &8422890210820498900
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,10 +342,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d889edd79e73148aa394ebb723f105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\xAA": 
-  v_ghost: {fileID: 0}
-  currentVoiceObject: {fileID: 2693942516023246510, guid: a29ee189d44683e4bbf266226ade4481, type: 3}
-  referenceSoundObject: {fileID: 2693942516023246510, guid: a29ee189d44683e4bbf266226ade4481, type: 3}
+  ghost: {fileID: 0}
+  voiceTemplate: {fileID: 2693942516023246510, guid: a29ee189d44683e4bbf266226ade4481, type: 3}
 --- !u!1 &8422890210847313619
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,13 +388,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3def0bee9d505f74aaa4a0c59e5acb03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "\xAA": 
-  music_menu: {fileID: 8300000, guid: 6447a15c5da31fd40ac8481a909f668e, type: 3}
-  music_persecution: {fileID: 8300000, guid: 8738234fdf9beb1489a17c69d6fb3704, type: 3}
-  music_terrorPad: {fileID: 8300000, guid: 5d61f59dc6321294cadeb6bc6985ba4f, type: 3}
-  music_end: {fileID: 8300000, guid: f45697d043f5dd9449405d2483e3651f, type: 3}
-  currentMusicObject: {fileID: 2179115469638567150, guid: 7f2ddc1b4f72b9c469fe456ff53308a4, type: 3}
-  referenceSoundObject: {fileID: 2179115469638567150, guid: 7f2ddc1b4f72b9c469fe456ff53308a4, type: 3}
+  menu: {fileID: 8300000, guid: 6447a15c5da31fd40ac8481a909f668e, type: 3}
+  persecution: {fileID: 8300000, guid: 8738234fdf9beb1489a17c69d6fb3704, type: 3}
+  terrorPad: {fileID: 8300000, guid: 5d61f59dc6321294cadeb6bc6985ba4f, type: 3}
+  ending: {fileID: 8300000, guid: f45697d043f5dd9449405d2483e3651f, type: 3}
+  voiceTemplate: {fileID: 2179115469638567150, guid: 7f2ddc1b4f72b9c469fe456ff53308a4, type: 3}
 --- !u!1 &8422890211001907225
 GameObject:
   m_ObjectHideFlags: 0

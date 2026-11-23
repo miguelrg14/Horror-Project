@@ -1,79 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
+using HorrorProject.Core;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class PlayerUIManager : MonoBehaviour
+/// <summary>Interface sounds (menus and buttons).</summary>
+public class PlayerUIManager : AudioChannel<PlayerUIManager>
 {
-    /// Referencia para entrar a este script desde fuera
-    public static PlayerUIManager instance;
-    // Asegura que la instancia del AudioManager esté linkeado a este script para poder acceder a el desde fuera
-    void Awake() { instance = this; }
+    [Header("Clips")]
+    [SerializeField, FormerlySerializedAs("ui_enterMenu")] private AudioClip enterMenu;
+    [SerializeField, FormerlySerializedAs("ui_button1")] private AudioClip button1;
+    [SerializeField, FormerlySerializedAs("ui_button2")] private AudioClip button2;
 
-    // Regula si 1 sonido corta al anterior tras sonar...
-    private static bool cutPlayerUI = true;
-    // Regula mediante el largo d la pista q el "gameObject" del sonido se destruya aunq no destruya al q sonó antes...
-    private static float playerUILength;
-
-    /// UI List
-    [Header("UI")]
-    public string ª;
-    public AudioClip ui_enterMenu, ui_button1, ui_button2;
-
-    /// Current UI Object
-    [Header("Current UI")]
-    public GameObject currentUIObject;
-
-    /// Sound Object
-    [Header("Sound Reference")]
-    public GameObject referenceSoundObject;
-
-    public void PlayUI(string uiName)
+    protected override void RegisterClips(SoundBank<AudioClip> clips)
     {
-        switch (uiName)
-        {
-            case "enterMenu": SoundObjectCreation(ui_enterMenu); break;
-            case "button1": SoundObjectCreation(ui_button1); break;
-            case "button2": SoundObjectCreation(ui_button2); break;
-            default: break;
-        }
+        clips.Add("enterMenu", enterMenu);
+        clips.Add("button1", button1);
+        clips.Add("button2", button2);
     }
 
-    public void PlayButton1()
-    {
-        SoundObjectCreation(ui_button1);
-    }
-    public void PlayButton2()
-    {
-        SoundObjectCreation(ui_button2);
-    }
+    public AudioSource PlayUI(string soundName) => Play(soundName);
 
-    /// Object Creations
-    void SoundObjectCreation(AudioClip clip)
-    {
-        playerUILength = clip.length;
-        // Creo un SoundObject gameobject dentro d la escena
-        currentUIObject = Instantiate(referenceSoundObject, transform);
-        // Le asigno un "audioClip" a su "AudioSource"
-        currentUIObject.GetComponent<AudioSource>().clip = clip;
-        // Ejecuto el audio
-        currentUIObject.GetComponent<AudioSource>().Play();
-        // Revisar si hay otro "gameObject" de otro sonido. Si lo hay lo elimina
-        if (currentUIObject == true && cutPlayerUI == true) { Destroy(currentUIObject, playerUILength); }
-    }
+    // Called from the buttons' OnClick events.
+    public void PlayButton1() => PlayUI("button1");
 
-    /// EFECTOS / MODIFICACIONES
-    // Hacer efecto
-    public void Loop() { currentUIObject.GetComponent<AudioSource>().loop = true; }
-
-    /* El false desactiva el destroy de "SoundObjectCreation" para q no corte el sonido anterior...
-     * 
-     * El "Destroy(currentSFXObject, playerSFXpLength);" elimina el sonido tras finalizar su duración
-     *  && no corta al siguiente (Básicamente ==> Corte automático con el tiempo mediante la duración del sonido...)
-    */
-    public void NoCut() { cutPlayerUI = false; Destroy(currentUIObject, playerUILength); }
-
-    // Deshacer efecto
-    public void NoLoop() { currentUIObject.GetComponent<AudioSource>().loop = false; }
-
-    public void Cut() { cutPlayerUI = false; }
+    public void PlayButton2() => PlayUI("button2");
 }

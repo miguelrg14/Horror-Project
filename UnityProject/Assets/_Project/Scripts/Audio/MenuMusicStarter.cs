@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class startMusic : MonoBehaviour
+/// <summary>Starts the looping main-menu theme.</summary>
+public class MenuMusicStarter : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
+        if (PlayerMusicManager.instance == null) return;
         PlayerMusicManager.instance.PlayMusic("menu");
         PlayerMusicManager.instance.Loop();
     }

@@ -1,20 +1,27 @@
 using UnityEngine;
 
-public class ClearSound : MonoBehaviour
+/// <summary>Removes a one-shot sound object once its clip has finished. Looping sounds are kept.</summary>
+[RequireComponent(typeof(AudioSource))]
+public class AudioAutoDestroy : MonoBehaviour
 {
-    AudioSource source;
+    private AudioSource source;
+    private bool hasStarted;
 
-    void Start()
+    private void Awake()
     {
         source = GetComponent<AudioSource>();
     }
 
-    void Update()
+    private void Update()
     {
-        if(!source.isPlaying)
+        if (source.isPlaying)
         {
-            source.Stop();
-            DestroyImmediate(gameObject);
+            hasStarted = true;
+            return;
         }
+
+        // Wait until the sound has actually started: it is created and played on the same frame.
+        bool finished = hasStarted && !source.loop;
+        if (finished || source.clip == null) Destroy(gameObject);
     }
 }
